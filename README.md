@@ -1,0 +1,2 @@
+# PlantsFactory
+Microservice application
