@@ -1,0 +1,80 @@
+version: "3"
+
+networks:
+  kafka-network:
+
+
+services:
+
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - kafka-network
+
+  kafka:
+    image: 'bitnami/kafka:latest'
+    # ports:
+    # - 9092:9092
+    # - 29092:29092
+    hostname: kafka
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_LISTENERS=PLAINTEXT://:9092,PLAINTEXT_HOST://:29092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    depends_on:
+      - zookeeper
+    networks:
+      - kafka-network
+
+  gateway:
+    image: gateway:latest
+    build: ../plants-shop-gateway
+    ports:
+      - 8085:8085
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BROKER_URL=kafka:9092
+      - SOAP_API_HOST=warehouse:8081
+    networks:
+      - kafka-network
+
+  ui:
+    image: shopui:latest
+    build: ../plants-ui
+    ports:
+      - 3000:80
+    networks:
+      - kafka-network
+
+  payments:
+    image: payment:latest
+    build: ../payment-service 
+    # ports:
+    # - 8084:8084
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BROKER_URL=kafka:9092
+    networks:
+      - kafka-network
+
+  warehouse:
+    image: warehouse:latest
+    build: ../plants-warehouse-service
+    # ports:
+    # - 8083:8083
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BROKER_URL=kafka:9092
+    networks:
+      - kafka-network

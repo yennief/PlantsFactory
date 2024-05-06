@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.plantsshop.justynafraczek.org" 
+	xmlns:tns="http://www.plantsshop.justynafraczek.org" 
+	elementFormDefault="qualified"
+	xmlns:bpt="http://www.plantsshop.justynafraczek.org/types">
+	<import schemaLocation="plantsTypes.xsd" namespace="http://www.plantsshop.justynafraczek.org/types"/>
+  <element name="plantsOrderRequest">
+    <complexType>
+    <element name="plantsOrder" type="bpt:plantsOrder"/> 
+    </complexType>
+  </element>
+  <element name="newPlantsOrderResponse">
+    <complexType>
+      <sequence>
+        <element name="orderID" type="string"/>
+        <element name="total_cost" type="double"/>
+        <element name="event" type="bpt:processingEvent"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="orderFault" type="bpt:Fault"/>
+  <element name="cancelOrderRequest">
+  	<complexType>
+  		<attribute name="orderID" type="string"/>
+  	</complexType>
+  </element>
+  <element name="cancelOrderResponse">
+    <complexType>
+      <sequence>
+        <element name="orderID" type="string"/>
+        <element name="status" type="bpt:processingState"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="getPlantRequest">
+  	<complexType>
+  		<attribute name="plantID" type="string"/>
+  	</complexType>
+  </element>
+  <element name="getPlantResponse">
+    <complexType>
+        <element name="plant" type="bpt:plant"/>
+    </complexType>
+  </element>
+
+  <element name="getPlantsRequest">
+    <complexType>
+      <attribute name="inputString" type="string"/>
+    </complexType>
+  </element>
+
+  <element name="getPlantsResponse">
+    <complexType>
+      <sequence>
+        <element name="plants" type="bpt:plant" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+
+</schema>

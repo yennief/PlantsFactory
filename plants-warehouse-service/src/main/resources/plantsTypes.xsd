@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="windows-1250" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.plantsshop.justynafraczek.org/types"
+            targetNamespace="http://www.plantsshop.justynafraczek.org/types"
+            elementFormDefault="qualified">
+  <xsd:simpleType name="processingState">
+    <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="NONE"/>
+    <xsd:enumeration value="ORDER_PLACED"/>
+    <xsd:enumeration value="AWAITING_PAYMENT"/>
+    <xsd:enumeration value="ORDER_BEING_PREPARED"/>
+    <xsd:enumeration value="REFUNDING_ORDER"/>
+    <xsd:enumeration value="ORDER_CANCELLED"/>
+    <xsd:enumeration value="ORDER_FINISHED"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="processingEvent">
+    <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="START"/>
+    <xsd:enumeration value="STORE_ENOUGH_PLANTS"/>
+    <xsd:enumeration value="STORE_NOT_ENOUGH_PLANTS"/>
+    <xsd:enumeration value="PAYMENT_TIMED_OUT"/>
+    <xsd:enumeration value="PAYMENT_DECLINED"/>
+    <xsd:enumeration value="PAYMENT_SUCCESSFUL"/>
+    <xsd:enumeration value="CANCEL_ORDER"/>
+    <xsd:enumeration value="COMPLETE"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="plant">
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:string"/>
+      <xsd:element name="name" type="xsd:string"/>
+      <xsd:element name="price" type="xsd:double"/>
+      <xsd:element name="quantity" type="xsd:int"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="plantsOrder">
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:string"/>
+      <xsd:element name="total_cost" type="xsd:double"/>
+      <xsd:element name="items" type="orderItemsList"/>
+      <xsd:element name="status" type="processingState"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="orderItemsList">
+    <xsd:sequence>
+      <xsd:element name="item" type="orderItem" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="orderItem">
+    <xsd:sequence>
+      <xsd:element name="plantId" type="xsd:string"/>
+      <xsd:element name="quantity" type="xsd:int"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Fault">
+    	<xsd:sequence>
+    		<xsd:element name="code" type="xsd:int"/>
+    		<xsd:element name="text" type="xsd:string"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
